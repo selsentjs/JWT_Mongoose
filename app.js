@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('express-async-errors') // used to avoid try and catch
 const express = require('express');
 const mongoose = require('mongoose');
 const userRouter = require('./route/registerRoute')
@@ -12,11 +13,21 @@ connection.once('open', () => {
 })
 
 app.use(express.json());
-app.use('/api/user', userRouter);
+
+
+// middleware
+const notFoundMiddleware = require('./middleware/not-found')
+const errorHandlerMiddleware = require('./middleware/error-handler')
+
 
 app.get('/', (req,res) => {
+   // throw new Error('error') - errorHandlerMiddleware handle this error
     res.send('welcome')
 })
+
+app.use('/api/user', userRouter);
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 
 app.listen(3000, () => {

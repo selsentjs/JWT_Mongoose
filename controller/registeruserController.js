@@ -1,35 +1,40 @@
-const User = require("../model/Register");
-const bcrypt = require("bcrypt");
-
-// get all users
-const getAllUsers = async (req, res) => {
-  try {
-    const user = await User.find();
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-};
+const User = require("../model/User");
 // create user
-const createUser = async (req, res) => {
-  const { username, password } = req.body;
+const register = async (req, res) => {
+  //const { username, password } = req.body;
   // try{
   //     const user = await User({username, password})
   //     user.save();
   //     res.status(201).json(user)
   // }
+  const {username,password} = req.body;
   try {
-    const { username } = req.body;
-    bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(req.body.password, salt, (err, hashedPassword) => {
-        const password = hashedPassword;
-        const newUser = new User({ username, password });
-        newUser.save();
-      });
-    });
+    const user = await User.create({username,password})
+    res.status(201).json(user)
+    
   } catch (err) {
     res.status(500).json(err);
   }
 };
 
-module.exports = { getAllUsers, createUser };
+//login
+const login = async(req,res) => {
+  try{
+
+  }
+  catch(err) {
+    res.status(500).json(err)
+  }
+}
+
+// logout
+const logout = async (req, res) => {
+  try {
+
+  }
+  catch (err) {
+    res.status(500).json(err)
+  }
+}
+
+module.exports = { register,login,logout };
